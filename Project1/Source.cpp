@@ -11,6 +11,7 @@ using namespace std;
 #pragma comment(lib,"comctl32")
 
 BOOL CALLBACK DlgProc(HWND, UINT, WPARAM, LPARAM);
+DWORD WINAPI TimerThread(LPVOID lp);
 
 HWND hReload;
 HWND hTerminate;
@@ -18,6 +19,8 @@ HWND hNew;
 HWND hProcName;
 HWND hProcList;
 HWND hStatID;
+HWND hDate;
+HWND hTimer;
 
 int WINAPI _tWinMain(HINSTANCE hInst, HINSTANCE hPrev, LPTSTR lpszCmdLine, int nCmdShow)
 {
@@ -52,16 +55,36 @@ BOOL CALLBACK DlgProc(HWND hWnd, UINT mes, WPARAM wp, LPARAM lp)
 	{
 	case WM_INITDIALOG:
 	{	
+		hTimer = GetDlgItem(hWnd, IDC_EDIT3);
+		hDate = GetDlgItem(hWnd, IDC_EDIT4);
 		hReload = GetDlgItem(hWnd, IDC_BUTTON1);
 		hTerminate = GetDlgItem(hWnd, IDC_BUTTON2);
 		hNew = GetDlgItem(hWnd, IDC_BUTTON3);
 		hProcName = GetDlgItem(hWnd, IDC_EDIT1);
 		hProcList = GetDlgItem(hWnd, IDC_LIST1);
 		hStatID = GetDlgItem(hWnd, IDC_EDIT2);
+		HANDLE hThread = CreateThread(NULL, 0, TimerThread, hTimer, 0, NULL);
+		SetThreadPriority(TimerThread, THREAD_PRIORITY_BELOW_NORMAL);
+		CloseHandle(hThread);
 	   	ShowProcList(hProcList);
+		SetTimer(hWnd, 1, 1000, 0);
 	}
 	return TRUE;
-
+	case WM_TIMER: {
+		SendMessage(hProcList, LB_RESETCONTENT, 0, 0);
+		ShowProcList(hProcList);
+		wofstream File;
+		File.open("Snapshot.txt");
+		int count = SendMessage(hProcList, LB_GETCOUNT, 0, 0);
+		for (int i = 0; i < count; i++)
+		{
+			TCHAR buff[50];
+			SendMessage(hProcList, LB_GETTEXT, (WPARAM)i, (LPARAM)buff);
+			File << buff;
+			File << endl;
+		}
+		File.close();
+	}
 	case WM_COMMAND:
 	{
 		if (LOWORD(wp) == IDC_BUTTON1) {
@@ -112,9 +135,25 @@ BOOL CALLBACK DlgProc(HWND hWnd, UINT mes, WPARAM wp, LPARAM lp)
 	break;
 
 	case WM_CLOSE:
+		TerminateThread(TimerThread,0);
 		DestroyWindow(hWnd);
 		EndDialog(hWnd, 0);
 		return TRUE;
 	}
 	return FALSE;
+}
+DWORD WINAPI TimerThread(LPVOID lp)
+{
+	static time_t t;
+	static TCHAR str[100];
+	while (true) {
+		t = time(NULL);
+		struct tm DateTime;
+		(localtime_s(&DateTime, &t));
+		_tcsftime(str, 100, TEXT("%H:%M:%S"), &DateTime);
+		SetWindowText(hTimer, str);
+		_tcsftime(str, 100, TEXT("%d.%m.%Y"), &DateTime);
+		SetWindowText(hDate, str);
+	}
+	return 0;
 }

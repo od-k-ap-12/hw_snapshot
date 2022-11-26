@@ -25,23 +25,6 @@ chrome.exe
 chrome.exe
 chrome.exe
 chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-chrome.exe
-cl.exe
-conhost.exe
 conhost.exe
 Cortana.exe
 csrss.exe
@@ -90,7 +73,6 @@ RuntimeBroker.exe
 RuntimeBroker.exe
 SearchApp.exe
 SearchApp.exe
-SearchFilterHost.exe
 SearchIndexer.exe
 SearchProtocolHost.exe
 SearchProtocolHost.exe
@@ -117,11 +99,9 @@ SgrmBroker.exe
 ShareX.exe
 ShellExperienceHost.exe
 sihost.exe
-smartscreen.exe
 smss.exe
 spoolsv.exe
 StartMenuExperienceHost.exe
-svchost.exe
 svchost.exe
 svchost.exe
 svchost.exe
@@ -211,6 +191,7 @@ UserOOBEBroker.exe
 vcpkgsrv.exe
 vcpkgsrv.exe
 vcpkgsrv.exe
+vcpkgsrv.exe
 vctip.exe
 Video.UI.exe
 vmcompute.exe
@@ -222,6 +203,5 @@ Wacom_UpdateUtil.exe
 WacomHost.exe
 wininit.exe
 winlogon.exe
-WinRAR.exe
 WTabletServicePro.exe
 [System Process]
